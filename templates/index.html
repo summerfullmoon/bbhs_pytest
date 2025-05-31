@@ -1,0 +1,64 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>배방고 예비 프로그래머들을 위한 파이썬</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>배방고 예비 프로그래머들을 위한 파이썬</h1>
+
+    <div class="score-box">
+      🏆 점수: {{ score }} / {{ total }}
+      <a href="/reset" class="reset-link">점수 초기화</a>
+    </div>
+
+    <section class="question-section">
+      <h2>💡 파이썬 코드</h2>
+      <pre id="code-block">{{ question_code }}</pre>
+    </section>
+
+    <section class="answer-section">
+      <h2>📝 당신의 예측 결과</h2>
+      <form id="answer-form" method="POST" action="/submit">
+        <textarea name="user_output" id="user_output" rows="5" placeholder="여기에 출력 결과를 작성하세요."></textarea>
+        <input type="hidden" name="quiz_id" value="{{ quiz_id }}">
+        <br>
+        <button type="submit">제출</button>
+      </form>
+    </section>
+
+    {% if result %}
+      <section class="result-section">
+        <h2>✅ 결과</h2>
+        <p><strong>정답:</strong></p>
+        <pre>{{ correct_output }}</pre>
+
+        <p><strong>당신의 답변:</strong></p>
+        <pre>{{ user_output }}</pre>
+
+        <p>
+          {% if is_correct %}
+            🎉 <span class="correct">정답입니다!</span>
+          {% else %}
+            ❌ <span class="incorrect">틀렸습니다. 다시 도전해 보세요.</span>
+          {% endif %}
+        </p>
+
+        {% if retry %}
+          <form action="/retry" method="GET">
+            <button type="submit">다시 풀기</button>
+          </form>
+        {% endif %}
+        <form action="/" method="GET">
+          <button type="submit">다음 문제</button>
+        </form>
+      </section>
+    {% endif %}
+  </div>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
